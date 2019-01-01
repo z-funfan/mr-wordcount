@@ -57,6 +57,8 @@ dependencies {
 
 ## 中文分词
 
+未完成
+
 ## Mapper代码
 ```java
 package xyz.funfan.mr.wordcount;
@@ -94,7 +96,7 @@ public class ArticleWordCountMapper extends Mapper<LongWritable, Text, Text, Int
 
 ## Partitioner代码
 集成Partitioner类，实现自己的分区逻辑。
-注意创建Driver类的时候，要制定Reduce Task的个数大于分区数，比如这里，至少要5个Task
+注意创建Driver类的时候，要制定Reduce Task的个数大于分区数，比如这里，至少要4个Task
 
 ```java
 package xyz.funfan.mr.wordcount;
@@ -127,6 +129,7 @@ public class ArticleWordPartitioner extends Partitioner<Text, IntWritable> {
 
 
 ## Combiner 代码
+未完成
 
 ## Reduce代码
 ```java
@@ -231,7 +234,7 @@ hadoop jar mr-wordcount-0.0.1-SNAPSHOT.jar xyz.funfan.mr.wordcount.ArticleWordCo
 ```
 
 input.txt
-[articles]()
+[articles](https://github.com/z-funfan/mr-wordcount/tree/master/articles/input)
 
 part-r-00000
 ```
