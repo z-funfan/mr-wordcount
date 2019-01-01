@@ -1,0 +1,40 @@
+MapReduce vs. Spark Smackdown (from Academia)!
+
+Apache Spark, you may have heard, performs faster than Hadoop MapReduce in Big Data analytics. An open source technology commercially stewarded by Databricks Inc., Spark can "run programs up to 100x faster than Hadoop MapReduce in memory, or 10x faster on disk," its main project site states.
+
+Those claims aren't readily attributed on the main site, but the Spark FAQ further states "it has been used to sort 100TB of data 3X faster than Hadoop MapReduce on 1/10th of the machines, winning the 2014 Daytona GraySort Benchmark.
+
+Generally, it's conceded that Spark performs better than MapReduce, in terms of speed and approach, as it allows for multi-stage, in-memory computation that facilitates more real-time, streaming analysis of Big Data workloads, even beyond use in the Hadoop ecosystem.
+
+Even a new research paper acknowledges that, but nevertheless goes through the effort to test both frameworks and present what it claims to be the "first in-depth analysis" of performance differences. Proving also that researchers are getting better at naming their stuff, the paper is titled "Clash of the Titans: MapReduce vs. Spark for Large Scale Data Analytics." It's attributed to Juwei Shi, Yunjie Qiu, Umar Farooq Minhas, Limei Jiao, Chen Wang, Berthold Reinwald and Fatma Ozcan, from IBM Research - China, IBM Almaden Research Center, DEKE, MOE and School of Information at the Renmin University of China and Tsinghua University.
+
+ Execution Details of the 40GB Word Count Test 
+[Click on image for larger view.]
+Execution Details of the 40GB Word Count Test (source: Clash of the Titans: MapReduce vs. Spark for Large Scale Data Analytics)
+"Through detailed experiments, we quantify the performance differences between MapReduce and Spark," the new paper states. "Furthermore, we attribute these performance differences to different components which are architected differently in the two frameworks."
+
+If the detailed experiments and in-depth analysis result are "tl;dr" for you" the 12-page research paper finds: "Spark is about 2.5x, 5x and 5x faster than MapReduce for Word Count, k-means and PageRank, respectively." While word count is self-explanatory, k-means and PageRank are iterative algorithms used to test the effectiveness of caching, the paper explained.
+
+The Clash of the Titans also explains MapReduce topped its more popular upstart competitor in one respect: "An exception to this is the Sort workload, for which MapReduce is 2x faster than Spark. We show that MapReduce's execution model is more efficient for shuffling data than Spark, thus making Sort run faster on MapReduce." Which brings into question the aforementioned Databricks "Daytona GraySort" claim; no doubt the company will weigh in on that issue.
+
+Besides the sort tests, the paper explained Spark's advantage comes from efficiency gained by "the hash-based aggregation component for combine, as well as reduced CPU and disk overheads due to RDD [Resilient Distributed Dataset] caching in Spark."
+
+In addition to proving the Spark advantage, the researchers provided tips for how developers of the core framework engines could improve both projects. One tip concerned improving the Spark architecture, which industry competitor DataTorrent slammed for not being suitable for enterprise use, espousing its own open source Apex project as an alternative.
+
+For developers, the new research paper noted:
+
+The core-engine developer of MapReduce/Spark can improve both the architecture and implementation through our observations. To improve the architecture, Spark might:
+Support the overlap between two stages with the shuffle dependency to hide the network overhead.
+Improve the availability of block information in case of an executor failure to avoid re-computation of some tasks from the previous stage.
+To catch up with the performance of Spark, the potential improvements to MapReduce are:
+Significantly reduce the task load time.
+Consider thread-based parallelism among tasks to reduce the context switching overhead
+Provide hash-based framework as an alternative to the sort-based shuffle.
+Consider caching the serialized intermediate data in memory, or on disk for reuse across multiple jobs.
+If you're still interested, there's a busy Quora question on the MapReduce/Spark issue, and commercial vendors MapR Technologies and Databricks weigh in on the subject, as do Xplenty and Typesafe. There's even more research to wade through, such as "Comparing Apache Spark and Map Reduce with Performance Analysis using K-Means."
+
+For another tl;dr, the latter research proved both that some researchers are lagging in the naming game and that: "Observing Spark's ability to perform batch processing, streaming, and machine learning on the same cluster and looking at the current rate of adoption of Spark throughout the industry, Spark will be the de facto framework for a large number of use cases involving Big Data processing."
+
+Full Article tl;dr: Spark's better, generally.
+
+Posted by David Ramel on 10/06/2015 at 1:20 PM
