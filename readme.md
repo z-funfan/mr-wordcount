@@ -57,17 +57,43 @@ dependencies {
 
 ## 中文分词
 
+这里的中文分词使用IKAnalyzer，最新的IKAnalyzer已经可以独立于lucene使用
+
+```java
+	private List<String> segment(String str) throws IOException{
+		byte[] byt = str.getBytes();
+		InputStream is = new ByteArrayInputStream(byt);
+		Reader reader = new InputStreamReader(is);
+		IKSegmenter iks = new IKSegmenter(reader, true);
+		Lexeme lexeme;
+		List<String> list = new ArrayList<String>();
+		while((lexeme = iks.next()) != null){
+			String text = lexeme.getLexemeText();
+			list.add(text);
+		}
+		return list;
+	}
+```
+
 ## Mapper代码
 ```java
 package xyz.funfan.mr.wordcount;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.wltea.analyzer.core.IKSegmenter;
+import org.wltea.analyzer.core.Lexeme;
 
 public class ArticleWordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 	// To avoid creating new object frequently
@@ -84,9 +110,27 @@ public class ArticleWordCountMapper extends Mapper<LongWritable, Text, Text, Int
         // Each word count 1
         // e.g. <a, 1> <b, 1> <c, 1> <a, 1> <a, 1> <z, 1>
         while (st.hasMoreTokens()) {
-        	word.set(st.nextToken());
-        	context.write(word, one);
+        	List<String> wordList = this.segment(st.nextToken());
+        	for (String wordStr: wordList) {
+        		System.err.printf("Mapper found word: <%s: %d>\n", wordStr, one.get());
+        		word.set(wordStr);
+        		context.write(word, one);
+        	}
         }
+	}
+
+	private List<String> segment(String str) throws IOException{
+		byte[] byt = str.getBytes();
+		InputStream is = new ByteArrayInputStream(byt);
+		Reader reader = new InputStreamReader(is);
+		IKSegmenter iks = new IKSegmenter(reader, true);
+		Lexeme lexeme;
+		List<String> list = new ArrayList<String>();
+		while((lexeme = iks.next()) != null){
+			String text = lexeme.getLexemeText();
+			list.add(text);
+		}
+		return list;
 	}
 }
 
@@ -94,7 +138,7 @@ public class ArticleWordCountMapper extends Mapper<LongWritable, Text, Text, Int
 
 ## Partitioner代码
 集成Partitioner类，实现自己的分区逻辑。
-注意创建Driver类的时候，要制定Reduce Task的个数大于分区数，比如这里，至少要5个Task
+注意创建Driver类的时候，要制定Reduce Task的个数大于分区数，比如这里，至少要4个Task
 
 ```java
 package xyz.funfan.mr.wordcount;
@@ -127,6 +171,7 @@ public class ArticleWordPartitioner extends Partitioner<Text, IntWritable> {
 
 
 ## Combiner 代码
+未完成
 
 ## Reduce代码
 ```java
@@ -231,7 +276,7 @@ hadoop jar mr-wordcount-0.0.1-SNAPSHOT.jar xyz.funfan.mr.wordcount.ArticleWordCo
 ```
 
 input.txt
-[articles]()
+[articles](https://github.com/z-funfan/mr-wordcount/tree/master/articles/input)
 
 part-r-00000
 ```
